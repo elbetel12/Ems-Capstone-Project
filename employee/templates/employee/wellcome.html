@@ -1,0 +1,48 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Welcome</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">
+            Welcome, {{ first_name }} {{ last_name }}
+        </li>
+    </ol>
+
+    {% if employee %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-id-card me-1"></i>
+            Employee ID Card
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    {% if employee.image %}
+                    <img src="{{ employee.image.url }}" alt="Employee Image" class="img-thumbnail">
+                    {% endif %}
+                    {% if employee.qr_code_image %}
+                    <img src="{{ employee.qr_code_image.url }}" alt="QR Code" class="img-thumbnail mt-3">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h3>{{ employee.first_name }} {{ employee.last_name }}</h3>
+                    <p><strong>Department:</strong> {{ employee.department.department_name }}</p>
+                    <p><strong>Position:</strong> {{ employee.position }}</p>
+                    <p><strong>Hire Date:</strong> {{ employee.hire_date }}</p>
+                    <p><strong>Salary:</strong> {{ employee.salary }}</p>
+                    <p><strong>Address:</strong> {{ employee.address }}</p>
+                    <p><strong>Phone:</strong> {{ employee.phone }}</p>
+                    <p><strong>Email:</strong> {{ employee.email }}</p>
+                    <p><strong>DOB:</strong> {{ employee.dob }}</p>
+                    <p><strong>Gender:</strong> {{ employee.gender }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>No employee information found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'employee/base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Payroll Invoice</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'wellcome' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'payroll' %}">Payroll</a></li>
+        <li class="breadcrumb-item active">Invoice</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-file-invoice-dollar me-1"></i>
+            Payroll Invoice
+        </div>
+        <div class="card-body">
+            <h5>Employee: {{ payroll.employee.first_name }} {{ payroll.employee.last_name }}</h5>
+            <p>Pay Date: {{ payroll.pay_date }}</p>
+            <p>Month: {{ payroll.month }}</p>
+            <p>Year: {{ payroll.year }}</p>
+            <p>Base Salary: {{ payroll.base_salary }}</p>
+            <p>Bonuses: {{ payroll.bonuses }}</p>
+            <p>Deductions: {{ payroll.deductions }}</p>
+            <p>Taxes: {{ payroll.taxes }}</p>
+            <p>Net Pay: {{ payroll.net_pay }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

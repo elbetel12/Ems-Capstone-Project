@@ -1,0 +1,90 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}  
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Edit Leave </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_leave' %}">Leave</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Leave</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-description"> Leave Details </p>
+                    {% if success %}
+                        <div id="leave-updated-success" style="display: none;"></div>
+                    {% endif %}
+                    <form class="forms-sample" method="post" enctype="multipart/form-data"> <!-- Add enctype -->
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Employee</label>
+                            <select name="employee" class="form-select">
+                                {% for employee in employees %}
+                                    <option value="{{ employee.id }}" {% if leave.employee.id == employee.id %}selected{% endif %}>{{ employee.first_name }} {{ employee.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveTypeSelect">Leave Type</label>
+                            <select name="leave_type" class="form-select" id="leaveTypeSelect">
+                                <option value="Sick" {% if leave.leave_type == 'Sick' %}selected{% endif %}>Sick</option>
+                                <option value="Vacation" {% if leave.leave_type == 'Vacation' %}selected{% endif %}>Vacation</option>
+                                <option value="Maternity" {% if leave.leave_type == 'Maternity' %}selected{% endif %}>Maternity</option>
+                                <option value="Paternity" {% if leave.leave_type == 'Paternity' %}selected{% endif %}>Paternity</option>
+                                <option value="Unpaid" {% if leave.leave_type == 'Unpaid' %}selected{% endif %}>Unpaid</option>
+                                <option value="Casual" {% if leave.leave_type == 'Casual' %}selected{% endif %}>Casual</option>
+                                <option value="Annual" {% if leave.leave_type == 'Annual' %}selected{% endif %}>Annual</option>
+                                <option value="Education" {% if leave.leave_type == 'Education' %}selected{% endif %}>Education</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="text" name="start_date" class="form-control" placeholder="MM/DD/YYYY" value="{{ leave.start_date|date:'m/d/Y' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="text" name="end_date" class="form-control" placeholder="MM/DD/YYYY" value="{{ leave.end_date|date:'m/d/Y' }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leaveStatusSelect">Leave Status</label>
+                            <select class="form-select" id="leaveStatusSelect" name="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div> 
+
+                        <!-- Add file upload for Leave Paper -->
+                        <div class="form-group"> 
+                            <label>Leave Paper</label>
+                            <input type="file" name="image" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
+                                </span>
+                            </div>
+                        </div>
+
+
+                        <!-- Show Image Button -->
+                        {% if leave.image %}
+                        <div class="form-group">
+                            <label for="showImage">Uploaded Image</label>
+                            <a href="{{ leave.image.url }}" class="btn btn-light" target="_blank">Show Image</a>
+                        </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-gradient-primary me-2">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

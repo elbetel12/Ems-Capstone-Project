@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Monthly Work Hours Report - {{ month }}/{{ year }} </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'monthly_work_hours_report' %}">Report Form</a></li>
+                    <li class="breadcrumb-item">Report - {{ month }}/{{ year }} </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="month" value="{{ month }}">
+                        <input type="hidden" name="year" value="{{ year }}">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th> Employee </th>
+                                        {% for day in days_in_month %}
+                                            <th> {{ day }} </th>
+                                        {% endfor %}
+                                        <th> Total Hours </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in report_data %}
+                                    <tr>
+                                        <td> {{ data.employee.first_name }} {{ data.employee.last_name }} </td>
+                                        {% for hours in data.days %}
+                                            <td> {{ hours }} </td>
+                                        {% endfor %}
+                                        <td> {{ data.total_hours }} </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="submit" name="download_excel" class="btn btn-success mt-3">Download Excel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

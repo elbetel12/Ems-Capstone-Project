@@ -1,0 +1,52 @@
+{% extends 'app/base.html' %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Add Attendance</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'attendance' %}">Attendeance</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Manual Attendance</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Manual Attendance</h4>
+                        {% if messages %}
+                            <div class="messages">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <form method="post" action="{% url 'manual_attendance' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="employee">Employee</label>
+                                <select class="form-select" id="employee" name="employee" required>
+                                    {% for employee in employees %}
+                                    <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="check_in">Check In Time</label>
+                                <input type="time" class="form-control" id="check_in" name="check_in">
+                            </div>
+                            <div class="form-group">
+                                <label for="check_out">Check Out Time</label>
+                                <input type="time" class="form-control" id="check_out" name="check_out">
+                            </div>
+                            <button type="submit" class="btn btn-gradient-primary me-2">Add Attendance</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

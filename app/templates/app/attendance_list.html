@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Attendance List</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <a class="nav-link" href="{% url 'manual_attendance' %}">
+                        <button type="submit" class="btn btn-gradient-primary me-2">Manual Attendance</button>
+                    </a>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Attendance Table</h4>
+                    <div class="table-responsive"></div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Employee </th>
+                                <th> Date </th>
+                                <th> Check-In </th>
+                                <th> Check-Out </th>
+                                <th> Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in attendance_records %}
+                            <tr>
+                                <td>{{ attendance.employee.first_name }} {{ attendance.employee.last_name }}</td>
+                                <td>{{ attendance.date }}</td>
+                                <td>{{ attendance.check_in }}</td>
+                                <td>{{ attendance.check_out }}</td>
+                                <td>
+                                    <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+{% endblock %}

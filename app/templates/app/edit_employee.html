@@ -1,0 +1,153 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Edit Employee </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_employees' %}">Employee</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Employee</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    {% if success %}
+                        <div id="employee-updated-success" style="display: none;"></div>
+                    {% endif %}
+                    <form class="form-sample" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <p class="card-description"> Personal info </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="first_name" class="form-control" value="{{ employee.first_name }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Last Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="last_name" class="form-control" value="{{ employee.last_name }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Sex</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" name="gender" value="Male" class="form-check-input" {% if employee.gender == "Male" %}checked{% endif %}> Male </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" name="gender" value="Female" class="form-check-input" {% if employee.gender == "Female" %}checked{% endif %}> Female </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Date of Birth</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" name="dob" class="form-control" value="{{ employee.dob|date:'Y-m-d' }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Address</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="address" class="form-control" value="{{ employee.address }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" name="email" class="form-control" value="{{ employee.email }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Phone Number</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="phone" class="form-control" value="{{ employee.phone }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description"> Job Description </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Department</label>
+                                    <div class="col-sm-9">
+                                        <select name="department" class="form-select">
+                                            {% for department in departments %}
+                                                <option value="{{ department.id }}" {% if employee.department.id == department.id %}selected{% endif %}>{{ department.department_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Position</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="position" class="form-control" value="{{ employee.position }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Date of Hire</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" name="hire_date" class="form-control" value="{{ employee.hire_date|date:'Y-m-d' }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Salary</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="salary" class="form-control" value="{{ employee.salary }}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>File Image</label>
+                            <input type="file" name="image" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gradient-primary me-2">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

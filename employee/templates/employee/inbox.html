@@ -1,0 +1,48 @@
+{% extends 'employee/base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Inbox</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'wellcome' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Inbox</li>
+    </ol>
+
+    {% if notifications %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-inbox me-1"></i>
+                Inbox Messages
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notification in notifications %}
+                        <tr>
+                            <td>{{ notification.message }}</td>
+                            <td>{{ notification.timestamp }}</td>
+                            <td>{{ notification.is_read|yesno:"Read,Unread" }}</td>
+                            <td>
+                                {% if not notification.is_read %}
+                                <a href="{% url 'mark_as_read' notification.id %}" class="btn btn-primary">Mark as Read</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p>No messages found.</p>
+    {% endif %}
+</div>
+{% endblock %}

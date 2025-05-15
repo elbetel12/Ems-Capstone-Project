@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Confirm Deletion </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_leave' %}">Leave</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Confirm Deletion</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Are you sure you want to delete the leave record of {{ leave.employee.first_name }} {{ leave.employee.last_name }}?</h4>
+                    <form method="post" action="{% url 'delete_leave' leave.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                        <a href="{% url 'list_leave' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'app/base.html' %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Payroll Invoice </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_payrolls' %}">Payroll</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Invoice</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Invoice for {{ payroll.employee.first_name }} {{ payroll.employee.last_name }}</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Employee Name:</strong> {{ payroll.employee.first_name }} {{ payroll.employee.last_name }}</p>
+                            <p><strong>Pay Date:</strong> {{ payroll.pay_date }}</p>
+                            <p><strong>Month:</strong> {{ payroll.month }}</p>
+                            <p><strong>Year:</strong> {{ payroll.year }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Base Salary:</strong> {{ payroll.base_salary }}</p>
+                            <p><strong>Bonuses:</strong> {{ payroll.bonuses }}</p>
+                            <p><strong>Deductions:</strong> {{ payroll.deductions }}</p>
+                            <p><strong>Taxes:</strong> {{ payroll.taxes }}</p>
+                            <p><strong>Net Pay:</strong> {{ payroll.net_pay }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'list_payrolls' %}" class="btn btn-light">Back to Payroll List</a>
+                </div>
+            </div>
+        </div>
+{% endblock %}

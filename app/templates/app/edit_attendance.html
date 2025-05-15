@@ -1,0 +1,35 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Edit Attendance</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'attendance_list' %}">Attendance List</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Attendance</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    {% if success %}
+                        <div id="department-updated-success" style="display: none;"></div>
+                    {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="check_in">Check-In Time</label>
+                        <input type="time" class="form-control" id="check_in" name="check_in" value="{{ attendance.check_in|time:'H:i' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="check_out">Check-Out Time</label>
+                        <input type="time" class="form-control" id="check_out" name="check_out" value="{{ attendance.check_out|time:'H:i' }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+{% endblock %}

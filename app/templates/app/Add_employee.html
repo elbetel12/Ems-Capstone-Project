@@ -1,0 +1,197 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}      
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Add Employee </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_employees' %}">Employee</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Employee</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    {% if success %}
+                        <div id="employee-registered-success" style="display: none;"></div>
+                    {% endif %}
+                    {% if messages %}
+                        <div class="alert alert-dismissible fade show" role="alert">
+                            {% for message in messages %}
+                                {% if message.tags == 'error' %}
+                                    <div class="alert alert-danger">{{ message }}</div>
+                                {% else %}
+                                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div> 
+                    {% endif %}
+                    <form class="form-sample" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <p class="card-description"> Personal info </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">First Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="first_name" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Last Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="last_name" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Sex</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" name="gender" value="Male" class="form-check-input" checked> Male </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="radio" name="gender" value="Female" class="form-check-input"> Female </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Date of Birth</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" name="dob" class="form-control" placeholder="dd/mm/yyyy" id="dob" required/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Place Of Birth</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="address" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description"> Address </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Address</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="address_detail" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" name="email" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Phone Number</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="phone" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-description"> Job Description </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Department</label>
+                                    <div class="col-sm-9">
+                                        <select name="department" class="form-select" required>
+                                            {% for department in departments %}
+                                                <option value="{{ department.id }}">{{ department.department_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Position</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="position" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Date of Hire</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" name="hire_date" class="form-control" placeholder="dd/mm/yyyy" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Salary</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="salary" class="form-control" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="row" style="margin-left: 20px;">
+                          <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_department_head" class="form-check-input" id="is_department_head">
+                                        <label class="form-check-label" for="is_department_head">Is Department Head</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Employees Picture</label>
+                            <input type="file" name="image" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gradient-primary me-2">Add Employee</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Calculate the date 22 years ago from today
+            const today = new Date();
+            const year = today.getFullYear() - 22;
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            const maxDate = `${year}-${month}-${day}`;
+    
+            // Set the max attribute of the date input
+            document.getElementById('dob').setAttribute('max', maxDate);
+        </script>
+{% endblock %}

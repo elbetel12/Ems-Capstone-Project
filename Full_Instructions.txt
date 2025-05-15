@@ -1,0 +1,31 @@
+
+INSTRUCTIONS:
+
+1. FIRST INSTALL THE FILE "Win64OpenSSL_Light-3_3_1.exe" (From the project folder):
+    - After the installation is done,
+    - Go to Windows and search for 'Edit the System Environmental Variables'
+    - Click 'Environmental Variables'
+    - Then there is a variable called 'Path', click it and then click 'Edit'
+    - Click 'New', then paste "C:\Program Files\OpenSSL-Win64\bin", and click 'OK' >> 'OK' >> 'OK'
+
+2. FOR DOWNLOADING OPENSSL, OPEN CMD AND RUN THIS:
+   ```
+   openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+   ```
+
+3. GO TO THE PROJECT DIRECTORY IN CMD THEN RUN:
+   - FOR DOWNLOADING THE REQUIREMENTS FOR THIS PROJECT:
+     ```
+     pip install -r requirements.txt
+     ```
+
+   - FOR STARTING THE SERVER:
+     ```
+     py manage.py runserver_plus  192.168.209.1:8000 --cert-file certs/cert.pem --key-file certs/key_nopass.pem
+          py manage.py runserver_plus   172.20.10.2:8000 --cert-file certs/cert.pem --key-file certs/key_nopass.pem
+     ```
+
+   - FOR GENERATING PAYROLL FOR EMPLOYEES:
+     ```
+     py manage.py generate_payroll
+     ```

@@ -1,0 +1,32 @@
+<!-- templates/app/notifications.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Notifications</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Notifications</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-bell me-1"></i>
+            Notifications
+        </div>
+        <div class="card-body">
+            {% if notifications %}
+                <ul class="list-group">
+                    {% for notification in notifications %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ notification.message }}
+                            <a href="{% url 'mark_notification_as_read' notification.id %}" class="btn btn-primary btn-sm">Mark as Read</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No notifications found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

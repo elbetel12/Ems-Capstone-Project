@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Work Hours Report</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Monthly Work Hours Report - {{ month }}/{{ year }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th> Employee </th>
+                {% for day in days_in_month %}
+                    <th> {{ day }} </th>
+                {% endfor %}
+                <th> Total Hours </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in report_data %}
+            <tr>
+                <td> {{ data.employee.first_name }} {{ data.employee.last_name }} </td>
+                {% for day in data.days %}
+                    <td> {{ day.hours }} </td>
+                {% endfor %}
+                <td> {{ data.total_hours }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

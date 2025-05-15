@@ -1,0 +1,103 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}  
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="page-header">
+      <h3 class="page-title">
+        <span class="page-title-icon bg-gradient-primary text-white me-2">
+          <i class="mdi mdi-home"></i>
+        </span> Dashboard
+      </h3>
+      <nav aria-label="breadcrumb">
+        <ul class="breadcrumb">
+          <li class="breadcrumb-item active" aria-current="page">
+            <span></span>Overview <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="row">
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-danger card-img-holder text-white">
+          <div class="card-body">
+            <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+            <h4 class="font-weight-normal mb-3">Total Employees <i class="mdi mdi-chart-line mdi-24px float-end"></i>
+            </h4>
+            <h2 class="mb-5">{{ total_employees }}</h2>
+        
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-info card-img-holder text-white">
+          <div class="card-body">
+            <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+            <h4 class="font-weight-normal mb-3">Departments <i class="mdi mdi-bookmark-outline mdi-24px float-end"></i>
+            </h4>
+            <h2 class="mb-5">{{total_dep}}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 stretch-card grid-margin">
+        <div class="card bg-gradient-success card-img-holder text-white">
+          <div class="card-body">
+            <img src="{% static 'images/dashboard/circle.svg' %}" class="card-img-absolute" alt="circle-image" />
+            <h4 class="font-weight-normal mb-3">New Hires  <i class="mdi mdi-diamond mdi-24px float-end"></i>
+            </h4>
+            <h2 class="mb-5">{{new_hires}}</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-7 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="clearfix">
+              <h4 class="card-title float-start">Employees by Department</h4>
+              <div id="visit-sale-chart-legend" class="rounded-legend legend-horizontal legend-top-right float-end"></div>
+            </div>
+            <ul class="list-group">
+              {% for department, count in employees_by_department.items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ department }}
+                    <span class="badge badge-primary badge-pill">{{ count }}</span>
+                </li>
+              {% endfor %}
+          </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body text-center"> <!-- Added 'text-center' to center content -->
+                <h4 class="card-title">Local Time</h4>
+                
+                <!-- Local Time Display -->
+                <div class="d-flex justify-content-center">
+                    <h2 id="local-time" style="font-size: 3rem; font-weight: bold;"></h2> <!-- Adjusted size and boldness -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function updateLocalTime() {
+            var now = new Date();
+            var ethiopiaTime = new Date(now.getTime() + (3 * 60 * 60 * 1000)); // Ethiopia is UTC+3
+            
+            var hours = String(ethiopiaTime.getUTCHours()).padStart(2, '0');
+            var minutes = String(ethiopiaTime.getUTCMinutes()).padStart(2, '0');
+            var seconds = String(ethiopiaTime.getUTCSeconds()).padStart(2, '0');
+            
+            document.getElementById('local-time').textContent = hours + ':' + minutes + ':' + seconds;
+        }
+    
+        setInterval(updateLocalTime, 1000);
+        updateLocalTime(); // Call initially on load
+    </script>
+    
+    </div>
+    <script src="{% static 'js/dashboard.js' %}"></script> 
+{% endblock %}

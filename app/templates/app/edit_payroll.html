@@ -1,0 +1,58 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Edit Payroll </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_payrolls' %}">Payroll</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Payroll</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="alert alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <form class="form-sample" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <p class="card-description"> Payroll info </p>
+                        <div class="form-group">
+                            <label for="payDate">Pay Date</label>
+                            <input type="date" name="pay_date" class="form-control" id="payDate" value="{{ payroll.pay_date|date:'Y-m-d' }}" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="baseSalary">Base Salary</label>
+                            <input type="number" name="base_salary" class="form-control" id="baseSalary" value="{{ payroll.base_salary }}" required disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="bonuses">Bonuses</label>
+                            <input type="number" name="bonuses" class="form-control" id="bonuses" value="{{ payroll.bonuses }}" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="deductions">Deductions</label>
+                            <input type="number" name="deductions" class="form-control" id="deductions" value="{{ payroll.deductions }}" required disabled/>
+                        </div>
+                        <div class="form-group">
+                            <label for="taxes">Taxes</label>
+                            <input type="number" name="taxes" class="form-control" id="taxes" value="{{ payroll.taxes }}" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="netPay">Net Pay</label>
+                            <input type="number" name="net_pay" class="form-control" id="netPay" value="{{ payroll.net_pay }}" required />
+                        </div>
+                        <button type="submit" class="btn btn-gradient-primary me-2">Update Payroll</button>
+                        <a href="{% url 'list_payrolls' %}" class="btn btn-light">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}

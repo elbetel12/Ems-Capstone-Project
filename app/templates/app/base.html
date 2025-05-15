@@ -1,0 +1,298 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>EMS</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}">
+    <script src="{% static 'js/chart.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+          <!-- <a  class="navbar-brand brand-logo" href="#"><img src="{% static 'images/logo1.png' %}" alt="logo" /></a> -->
+           FY Supermarket
+          <a class="navbar-brand brand-logo-mini" href="#"><img src="{% static 'images/logo-mini.svg' %}" alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-stretch">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <div class="search-field d-none d-md-block">
+            <form class="d-flex align-items-center h-100" action="#">
+              <div class="input-group">
+                <div class="input-group-prepend bg-transparent">
+                  <i class="input-group-text border-0 mdi mdi-magnify"></i>
+                </div>
+                {% block search %}
+                
+
+                {% endblock %}
+              </div>
+            </form>
+          </div>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="nav-profile-img">
+                  <!-- <img src="{% static 'images/faces/face1.jpg' %}" alt="image"> -->
+                  <span class="availability-status online"></span>
+                </div>
+                <div class="nav-profile-text">
+                  <p class="mb-1 text-black">{{ department_head.employee.first_name }} {{ department_head.employee.last_name }}</p>
+                </div>
+              </a>
+              <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item" href="{% url 'change_password' %}">
+                  <i class="mdi mdi-cached me-2 text-success"></i> Change Password </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i class="mdi mdi-logout me-2 text-primary"></i> Signout </a>
+              </div>
+            </li>
+            <li class="nav-item d-none d-lg-block full-screen-link">
+              <a class="nav-link">
+                <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
+              </a>
+            </li>
+            <!-- <li class="nav-item dropdown">
+              <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="mdi mdi-email-outline"></i>
+                <span class="count-symbol bg-warning"></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="messageDropdown">
+                
+              </div>
+            </li> -->
+            <li class="nav-item dropdown">
+              <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+                  <i class="mdi mdi-bell-outline"></i>
+                  {% if unread_notifications_count > 0 %}
+                  <span class="count-symbol bg-danger"></span>
+                  {% endif %}
+              </a>
+              {% if request.user|is_hr %}
+              <div class="dropdown-menu dropdown-menu-end navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                  <h6 class="p-3 mb-0">{{ unread_notifications_count }} Notifications</h6>
+          
+                  {% for notification in notifications %}
+                  <div class="dropdown-divider"></div>
+          
+                  <!-- Check if notification has an associated leave before generating the URL -->
+                  {% if notification.leave %}
+                  <a class="dropdown-item preview-item" href="{% url 'edit_leave' notification.leave.id %}">
+                      <div class="preview-thumbnail">
+                          <div class="preview-icon bg-success">
+                              <i class="mdi mdi-calendar"></i>
+                          </div>
+                      </div>
+                      <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                          <h6 class="preview-subject font-weight-normal mb-1">{{ notification.message }}</h6>
+                          <p class="text-gray ellipsis mb-0"> {{ notification.timestamp }} </p>
+                      </div>
+                  </a>
+                  {% else %}
+                  <span class="dropdown-item preview-item">No leave associated with this notification</span>
+                  {% endif %}
+          
+                  <a href="{% url 'mark_notification_as_read' notification.id %}" class="btn btn-primary btn-sm">Mark as Read</a>
+                  {% endfor %}
+              </div>
+              {% endif %}
+          </li>
+          
+
+            <li class="nav-item nav-logout d-none d-lg-block">
+              <a class="nav-link" href="{% url 'logout' %}">
+                <i class="mdi mdi-power"></i>
+              </a>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <ul class="nav">
+            <li class="nav-item nav-profile">
+              <a href="#" class="nav-link">
+                <div class="nav-profile-image">
+                  <!-- <img src="{% static 'images/faces/face1.jpg' %}" alt="profile" /> -->
+                  <span class="login-status online"></span>
+                  <!--change to offline or busy as needed-->
+                </div>
+                <div class="nav-profile-text d-flex flex-column">
+                  {% if department_head %}
+                    <span class="font-weight-bold mb-2">{{ department_head.employee.first_name }} {{ department_head.employee.last_name }}</span>
+                    <span class="text-secondary text-small">Manager of {{ department_head.employee.department.department_name }}</span>
+                  {% endif %}
+                </div>
+                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+              </a>
+            </li>
+  
+            <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <span class="menu-title">Dashboard</span>
+                <i class="mdi mdi-home menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item {% if request.path == '/apps/list_employees/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'list_employees' %}">
+                <span class="menu-title">Employee</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+              </a>
+            </li>
+            {% if request.user|is_hr %}
+            <li class="nav-item {% if request.path == '/apps/list_departments/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'list_departments' %}">
+                <span class="menu-title">Department</span>
+                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item {% if request.path == '/apps/list_leave/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'list_leave' %}">
+                <span class="menu-title">Leave</span>
+                <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+              </a>
+            </li>
+            {% if request.user|is_hr %}
+            <li class="nav-item {% if request.path == '/apps/attendance/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'attendance' %}">
+                <span class="menu-title">Attendance</span>
+                <i class="mdi mdi-table-large menu-icon"></i>
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item {% if request.path == '/apps/list_evaluations/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'list_evaluations' %}">
+                <span class="menu-title">Evaluation</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+              </a>
+            </li>
+            <li class="nav-item {% if request.path == '/apps/monthly_work_hours_report/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'monthly_work_hours_report' %}">
+                <span class="menu-title">Work Hour Report</span>
+                <i class="mdi mdi-chart-bar menu-icon"></i>
+              </a>
+            </li>
+            {% if request.user|is_hr %}
+            <li class="nav-item {% if request.path == '/apps/list_payrolls/' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'list_payrolls' %}">
+                <span class="menu-title">Payroll</span>
+                <i class="mdi mdi-file-document-box menu-icon"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>           
+        <!-- partial -->
+        {% block content %}
+        
+
+
+
+ 
+
+
+
+
+
+
+        {% endblock %}
+          <!-- partial:../../partials/_footer.html -->
+          <footer class="footer">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+              <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 EMS. All rights reserved.</span>
+              
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'vendors/select2/select2.min.js' %}"></script>
+    <script src="{% static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    
+    <script src="{% static 'js/off-canvas.js' %}"></script>
+    <script src="{% static 'js/misc.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/todolist.js' %}"></script>
+    <script src="{% static 'js/jquery.cookie.js' %}"></script>
+    <!-- endinject -->
+  
+    <script src="{% static 'js/file-upload.js' %}"></script>
+    <script src="{% static 'js/typeahead.js' %}"></script>
+    <script src="{% static 'js/select2.js' %}"></script>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+<script>
+ function markNotificationAsRead(notificationId) {
+    fetch(`/mark_notification_as_read/${notificationId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Notification marked as read');
+            // Remove the notification from the dropdown
+            document.getElementById(`notification-${notificationId}`).remove();
+            // Update the notification count
+            const notificationCountElem = document.getElementById('unread-notifications-count');
+            const currentCount = parseInt(notificationCountElem.innerText);
+            notificationCountElem.innerText = currentCount - 1;
+        } else {
+            console.error('Error marking notification as read:', data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+  </script>
+  </body>
+</html>

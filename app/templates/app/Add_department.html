@@ -1,0 +1,55 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}      
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Add Department </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_departments' %}">Department</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Department</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    {% if success %}
+                        <div id="department-added-success" style="display: none;"></div>
+                    {% endif %}
+                    {% if messages %}
+                    <div class="alert alert-dismissible fade show" role="alert">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <form class="form-sample" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <p class="card-description"> Department info </p>
+                        <div class="form-group">
+                            <label for="departmentName">Department Name</label>
+                            <input type="text" name="department_name" class="form-control" id="departmentName" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentHead">Department Head</label>
+                            <select name="department_head" class="form-select" id="departmentHead">
+                                <option value="">Select Head</option>
+                                {% for employee in employees %}
+                                    <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea name="description" class="form-control" id="description" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-gradient-primary me-2">Add Department</button>
+                        <a href="{% url 'list_departments' %}" class="btn btn-light">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

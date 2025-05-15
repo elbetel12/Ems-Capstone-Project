@@ -1,0 +1,111 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="main-panel">
+  <div class="content-wrapper">
+      <div class="page-header">
+          <h3 class="page-title">Attendance</h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <a class="nav-link" href="{% url 'manual_attendance' %}">
+                    <button type="submit" class="btn btn-gradient-primary me-2">Manual Attendance</button>
+                </a>
+                <a class="nav-link" href="{% url 'attendance_list' %}">
+                  <button type="submit" class="btn btn-gradient-primary me-2">Attendance list</button>
+              </a>
+            </ol>
+         </nav>
+      </div>
+      <div class="row">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">QR Scan</h4>
+                    <div class="row">
+                        <div id="your-qr-result"></div>
+                        <div style="display: flex; justify-content: center">
+                          <div id="my-qr-reader" style="width: 500px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <script src="https://unpkg.com/html5-qrcode"></script>
+      <script>
+        function domReady(fn) {
+          if (
+            document.readyState === "complete" ||
+            document.readyState === "interactive"
+          ) {
+            setTimeout(fn, 1);
+          } else {
+            document.addEventListener("DOMContentLoaded", fn);
+          }
+        }
+
+        domReady(function () {
+          var myQr = document.getElementById("your-qr-result");
+          var LastResult,
+            countResult = 0;
+
+          function onScanSuccess(decodeText, decodeResult) {
+            if (decodeResult !== LastResult) {
+              ++countResult;
+              LastResult = decodeText;
+              alert("Your QR code Result: " + decodeResult);
+              myQr.innerHTML = `You scanned ${countResult}: ${decodeText}`;
+
+              // Send the decoded text to the Django view
+              fetch("{% url 'qr_code_scan' %}", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": getCookie("csrftoken"), // Include the CSRF token
+                },
+                body: JSON.stringify({ qr_data: decodeText }),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log("Success:", data);
+                  // Display the message in the template
+                  var messageDiv = document.createElement("div");
+                  messageDiv.innerHTML = `Server response: ${data.message}`;
+                  document.body.appendChild(messageDiv);
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            }
+          }
+
+          var htmlscanner = new Html5QrcodeScanner("my-qr-reader", {
+            fps: 10,
+            qrbox: 250,
+          });
+          htmlscanner.render(onScanSuccess);
+        });
+
+        // Helper function to get the CSRF token
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                  cookie.substring(name.length + 1)
+                );
+                break;
+              }
+            }
+          }
+          return cookieValue;
+        }
+      </script>
+
+{% endblock %}

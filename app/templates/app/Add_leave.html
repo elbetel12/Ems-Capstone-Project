@@ -1,0 +1,89 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block content %}  
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title"> Leave Form </h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_leave' %}">Leave</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Leave</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-description"> Leave Details </p>
+                    {% if success %}
+                        <div id="leave-added-success" style="display: none;"></div>
+                    {% endif %}
+                    {% if messages %}
+                        <div class="alert alert-dismissible fade show" role="alert">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form class="forms-sample" method="post" enctype="multipart/form-data"> <!-- Add enctype -->
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="employeeSelect">Employee</label>
+                            <select class="form-select" id="employee" name="employee" required>
+                                {% for employee in employees %}
+                                    <option value="{{ employee.id }}">{{ employee.first_name }} {{ employee.last_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveTypeSelect">Leave Type</label>
+                            <select class="form-select" id="leaveTypeSelect" name="leave_type" required>
+                                <option value="Sick">Sick</option>
+                                <option value="Vacation">Vacation</option>
+                                <option value="Maternity">Maternity</option>
+                                <option value="Paternity">Paternity</option>
+                                <option value="Annual">Annual</option>
+                                <option value="Casual">Casual</option>
+                                <option value="Unpaid">Unpaid</option>
+                                <option value="Education">Education</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="start_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="end_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveStatusSelect">Leave Status</label>
+                            <select class="form-select" id="leaveStatusSelect" name="status" required>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div> 
+
+                        <!-- Add file upload for Leave Paper -->
+                        <div class="form-group"> 
+                            <label>Leave Certificate, Ticket or related Document (optional)</label>
+                            <input type="file" name="image" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-gradient-primary py-3" type="button">Upload</button>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                        <button type="button" class="btn btn-light">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}
